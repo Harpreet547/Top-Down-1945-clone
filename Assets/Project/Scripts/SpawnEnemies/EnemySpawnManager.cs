@@ -25,7 +25,7 @@ public class EnemySpawnManager : MonoBehaviour {
         Vector2 spawnPoint = enemySpawnArea.GetSpawnPoint();
         GameObject enemy = Instantiate(basicEnemyUnit, spawnPoint, transform.rotation);
         Spawnable spawnable = enemy.GetComponent<Spawnable>();
-        Debug.Log(spawnable.secondsToCompleteSpawning);
+
         yield return new WaitForSeconds(delayBetweenSpawns + spawnable.secondsToCompleteSpawning);
 
         isSpawning = false;
