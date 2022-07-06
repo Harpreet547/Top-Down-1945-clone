@@ -2,6 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum SpawnEdge {
+    left = 1,
+    top,
+    right,
+    topCenter,
+}
+
 public class EnemySpawnArea : MonoBehaviour {
 
     public GameObject[] spawnPoints;
@@ -26,8 +33,8 @@ public class EnemySpawnArea : MonoBehaviour {
         //     StartCoroutine(SpawnEnemy());
     }
 
-    public Vector2 GetSpawnPoint() {
-        int randomEdge = Random.Range(1, 4);
+    public Vector2 GetSpawnPoint(SpawnEdge? spawnEdge) {
+        int randomEdge = spawnEdge != null ? (int)spawnEdge : Random.Range(1, 4);
         Vector2 point1;
         Vector2 point2;
         switch(randomEdge) {
@@ -36,6 +43,7 @@ public class EnemySpawnArea : MonoBehaviour {
                 point2 = spawnPoints[0].transform.position - spawnPoints[1].transform.position;
                 break;
             case 2:
+            case 4:
                 point1 = spawnPoints[1].transform.position;
                 point2 = spawnPoints[1].transform.position - spawnPoints[2].transform.position;
                 break;
@@ -44,11 +52,11 @@ public class EnemySpawnArea : MonoBehaviour {
                 point2 = spawnPoints[2].transform.position - spawnPoints[3].transform.position;
                 break;
             default:
-                point1 = spawnPoints[0].transform.position;
-                point2 = spawnPoints[0].transform.position - spawnPoints[1].transform.position;
+                point1 = spawnPoints[1].transform.position;
+                point2 = spawnPoints[1].transform.position - spawnPoints[2].transform.position;
                 break;
         }
-        Vector2 randomPosition = point1 - point2 * Random.value;
+        Vector2 randomPosition = spawnEdge != null && spawnEdge == SpawnEdge.topCenter ? (Vector2)((spawnPoints[1].transform.position + spawnPoints[2].transform.position) / 2) : point1 - point2 * Random.value;
         return randomPosition;
         // Instantiate(enemy, randomPosition, transform.rotation);
         // isSpawnCoroutineRunning = true;

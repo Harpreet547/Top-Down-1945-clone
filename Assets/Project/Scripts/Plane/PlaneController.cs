@@ -2,12 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlaneController : MonoBehaviour {
+public class PlaneController : MonoBehaviour, Killable {
 
     [Header("Movement")]
     public float speedX = 50;
     public float speedY = 50;
+    public float _health = 10;
 
+    [HideInInspector]
+    public float health { get => _health; set { _health = value; } }
     private Rigidbody2D rb;
 
     void Start() {
@@ -33,4 +36,17 @@ public class PlaneController : MonoBehaviour {
             speedY * inputVector.y * Time.deltaTime
         );
     }
+
+    public void CheckIfKilled() {
+        if(health <= 0) {
+            // TODO: Death animation
+            Destroy(gameObject);
+        }
+    }
+
+    public void TakeDamage(float damage) {
+        health -= damage;
+        CheckIfKilled();
+    }
+
 }
