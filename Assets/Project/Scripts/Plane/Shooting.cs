@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Shooting : MonoBehaviour {
 
+    // TODO: Check if this is the best place for bullet damage
+    public float damage = 10;
     public Transform[] firePoints;
     public GameObject bulletPrefab;
     public float bulletForce = 20f;
@@ -22,8 +24,10 @@ public class Shooting : MonoBehaviour {
     }
 
     private void ShootFromPoint(Transform point) {
-        GameObject bullet = Instantiate(bulletPrefab, point.position, point.rotation);
-        Rigidbody2D bulletRB = bullet.GetComponent<Rigidbody2D>();
+        GameObject bulletPrefab = Instantiate(this.bulletPrefab, point.position, point.rotation);
+        Rigidbody2D bulletRB = bulletPrefab.GetComponent<Rigidbody2D>();
+        Bullet bullet = bulletPrefab.GetComponent<Bullet>();
+        bullet.SetDamage(damage);
         bulletRB.AddForce(point.up * bulletForce, ForceMode2D.Impulse);
     }
 }

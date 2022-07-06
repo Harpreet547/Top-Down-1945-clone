@@ -22,7 +22,7 @@ public class EnemySpawnManager : MonoBehaviour {
 
     IEnumerator SpawnEnemy() {
         isSpawning = true;
-        Vector2 spawnPoint = enemySpawnArea.GetSpawnPoint();
+        Vector2 spawnPoint = enemySpawnArea.GetSpawnPoint(null);
         GameObject enemy = Instantiate(basicEnemyUnit, spawnPoint, transform.rotation);
         Spawnable spawnable = enemy.GetComponent<Spawnable>();
 

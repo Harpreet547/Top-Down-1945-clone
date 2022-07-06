@@ -5,9 +5,11 @@ using System.Linq;
 
 public class FollowWaypoints : MonoBehaviour {
 
+    public int numberOfWaypointsBeforeGoingAway = 5;
     protected Waypoint[] allWaypoints;
     protected Waypoint currentWaypoint;
     protected Vector3 targetPosition = Vector3.zero;
+    private int numberOfWaypointsCovered = 0;
 
     protected void Awake() {
         allWaypoints = FindObjectsOfType<Waypoint>();
@@ -15,7 +17,8 @@ public class FollowWaypoints : MonoBehaviour {
     }
 
     protected void Update() {
-        FollowWaypoint();
+        if(numberOfWaypointsCovered < numberOfWaypointsBeforeGoingAway && numberOfWaypointsCovered >= 0) FollowWaypoint();
+        else if(numberOfWaypointsCovered != -1) GoOutOfBounds();
         // transform.position = Vector2.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime * 0.1f);
     }
 
@@ -32,6 +35,7 @@ public class FollowWaypoints : MonoBehaviour {
         if(distanceToWayPoint <= currentWaypoint.minDistanceToReactWaypoint) {
             // If we are close enough then follow to the next waypoint, if there are multiple waypoints then pick one at random.
             currentWaypoint = currentWaypoint.nextWaypointNode[Random.Range(0, currentWaypoint.nextWaypointNode.Length)];
+            numberOfWaypointsCovered++;
         }
     }
 
@@ -39,9 +43,16 @@ public class FollowWaypoints : MonoBehaviour {
         return allWaypoints.OrderBy(t => Vector3.Distance(transform.position, t.transform.position)).FirstOrDefault();
     }
 
+    private void GoOutOfBounds() {
+        EnemySpawnArea enemySpawnArea = FindObjectOfType<EnemySpawnArea>();
+        Vector2 nextWaypoint = enemySpawnArea.GetSpawnPoint(null);
+        targetPosition = nextWaypoint;
+        numberOfWaypointsCovered = -1;
+    } 
+
     void OnDrawGizmos() {
         if(currentWaypoint == null) return;
 
-        Debug.DrawLine(transform.position, currentWaypoint.transform.position, Color.green);
+        Debug.DrawLine(transform.position, targetPosition, Color.green);
     }
 }

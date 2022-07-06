@@ -17,4 +17,13 @@ public class Utils : MonoBehaviour {
         float angle = Mathf.Atan2(y, x) * Mathf.Rad2Deg;
         return Quaternion.Euler(new Vector3(0, 0, angle - 90));
     }
+
+    public bool CheckIfOutOfBounds(Transform target) {
+        Vector2 screenPosition = Camera.main.WorldToScreenPoint (target.position);
+        if ((screenPosition.x > Screen.width) || (screenPosition.x < 0 - Screen.width)  || (screenPosition.y > Screen.height) || (screenPosition.y < 0 - Screen.height)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
